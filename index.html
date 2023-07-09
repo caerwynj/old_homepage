@@ -1,0 +1,63 @@
+<html>
+<head>
+<title>Caerwyn Jones</title>
+<base href="http://home.comcast.net/~caerwyn/">
+</head>
+<body>
+<h2>Caerwyn Jones</h2>
+<i>caerwyn@comcast.net</i>
+<h3>software</h3>
+<ul>
+<li><a href="tea.tgz">tea</a> for plan9 (<a href="tut.html">Tutorial</a>). 
+</ul>
+Included in <i>tea</i> are a set of commands that 
+implement temporal database operations:
+<ul>
+<li><a href="tdbjoin.html">tdbjoin</a></li>
+<li><a href="tdbadd.html">tdbadd</a></li>
+<li><a href="tdbcoin.html">tdbcoin</a></li>
+</ul>
+<p>
+tdbjoin and tdbadd are built using some
+<a href="http://plan9.bell-labs.com/plan9/">Plan 9</a> libraries.
+A unix port of these libraries
+can be downloaded from <a href="http://www.pdos.lcs.mit.edu/~rsc/software/">here</a>.
+<ul>
+<li><a href="utea.tgz">tea</a> for unix, which includes a unix version of 9ls</li>
+</ul>
+<p>
+The tea script is an application of the tdb tools aimed at 
+meta data for a filesystem. That is annotating files with information
+about what they contain and when you used them, or how you used them.
+This is a poor man's  version  of Gordon Bell's 
+<a href="http://research.microsoft.com/barc/mediapresence/MyLifeBits.aspx">
+MyLifeBits</a>  Project.
+<p>
+The tdb* tools have other uses also. I use them to index all my text files
+as the backend of a search engine. I use them for project tracking, time
+tracking  and process control. I use them as a temporal replacement for the /rdb
+UNIX tools.
+<h3>work in progress</h3>
+<h4>PostDate</h4>
+PostDate is a language for managing time varying data and code. 
+<p>
+PostDate's syntax is a postfix (reverse Polish) notation loosely based
+on PostScript. It uses bi-temporal (transaction time and valid time) 
+binary relations to store and query time varying data.
+<p>
+Built in operators retrieve temporal triads of time, element, and
+attribute values from named relations.  The value associated with a
+key may vary with time, and so the value retrieved depends on the
+choice of effective valid time.  The value for a given key may contain
+PostDate code, which allows procedure definitions to vary along the
+valid time line.  The bi-temporal nature of the database also allows
+us to set the effective transaction time and review the state of the
+database exactly as it appeared on some past date.
+<p>
+Here is a rough start <a href="pd.tgz">pd.tgz</a> 2003/1128.
+And some <a href="pd.html">notes</a>.
+
+<br>
+<img src="/cgi-bin/counter.gif">
+</body>
+</head>

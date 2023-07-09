@@ -1,0 +1,247 @@
+<html>
+<head>
+<title>PostDate</title>
+</head>
+<body>
+<h1>Notes</h1>
+<i>November 30th, 2003</i>
+<h2>Overview</h2>
+PostDate is an interpreter for a simple postfix notation.
+Objects are pushed onto the operand stack where operators
+pop them as required and push back any results.
+<p>
+An object can be one of number, string, code, or dictionary.
+<p>
+Strings are enclosed in parentheses
+<pre>
+(this is a string)
+(this is a (string) with nested parens)
+</pre>
+<p>
+Code is quoted by braces
+<pre>
+{1 1 add} exec print
+</pre>
+Numbers and declared names and builtins are referred to
+directly. There are some builtin operators, defined below.
+New operators can be defined and stored in dictionaries.
+Operators are referred to by literal names that are searched
+for in the dictionary stack. Dictionaries can be pushed or popped
+from this stack.
+<p>
+Along with the operand and dictionary stacks, there is an execution
+stack and implicit valid-time stack. The execution stack  always
+has an effective valid time which is used to look up objects
+in any of the dictionaries. As code is pushed onto the stack the
+valid time associated with that code object is pushed onto
+the valid-time stack thereby becoming the effective valid time.
+<p>
+Every operand object has a valid-time. For interactive use of the
+postdate interpreter, the valid-time is usually
+the current time. But for objects looked up from a dictionary the
+valid-time is the time the object was entered into the dictionary.
+The valid-time of an operand can be changed using the <i>date</i> operator.
+<p>
+The <i>date</i> operator takes a string and an object as operands and
+interprets the string as a date specifiction in the format YYYYMMDD 
+where YYYYMM are optional. Some special symbols are recognized.
+Dot, ".", is the current time, "^", is the startof the epoch, and "$" is the end.
+
+<h2>Examples</h2>
+Refer to operator definitions below.
+<p>
+Create a new dictionary called <i>t1</i> in the current directory; 
+define some values in the dictionary;
+then step through contents of dictionary.
+<pre>
+(t1) dict begin
+(a) 1 def
+(b) 2 def
+t1 save
+t1 {print print} forall
+</pre>
+
+<p>
+Open the same dictionary as above and define a function to add <i>a</i> and 
+<i>b</i>.
+Execute it and print the result.
+<pre>
+(t1) dict begin
+(c) {a b add} def
+t1 save
+c print
+</pre>
+
+<p>
+In the same dictionary define <i>a</i> to a different value and 
+execute <i>c</i> again. What is the result?
+<pre>
+(t1) dict begin
+(a) 2 def
+t1 save
+c print
+</pre>
+
+<p>
+Set the effective valid time of the function to the current
+time before executing it, therefore taking the most recent
+definition of <i>a</i>.
+<pre>
+(t1) dict begin
+(c) load (.) date exec print
+</pre>
+
+
+<h2>Operators</h2>
+<table>
+<tr>
+<th>Operand stack <th>Operator <th>Result<th>Description
+<tr>
+<td>any		<td>pop	<td>-	<td>pops the top object from the stack
+
+<tr>
+<td>any		<td>print	<td>any	<td> prints the top object on the stack
+
+<tr>
+<td>int int	<td>add	<td>int	<td>add the top two numbers pushing the result onto the operand stack
+
+<tr>
+<td>int int	<td>sub	<td>int	<td>subtract the top two operands
+
+<tr>
+<td>int int	<td>mul	<td>int	<td>multiply the top two operands
+
+<tr>
+<td>int int	<td>div	<td>int	<td>divide the top two operands
+
+<tr>
+<td>dict		<td>begin	<td>-	<td>pushes the dictionary onto the dictionary stack
+
+<tr>
+<td>string	<td>dict	<td>dict	<td>creates a new dict by opening/creating a file named <i>string</i> which name also becomes a literal
+
+<tr>
+<td>-		<td>end	<td>-	<td>pops the top dictionary from the dictionary stack
+
+
+<tr>
+<td>dict code	<td>forall	<td>dict	<td>for each member of dict push key,value onto operand stack and execute <i>code</i>
+
+<tr>
+<td>any string	<td>date	<td>any	<td>set the valid time for the object using the <i>string</i> to specify the date in the YYYYMMDD format where YYYYMM are optional
+and default to the current month and year.
+
+<tr>
+<td>code		<td>exec	<td>-	<td> execute the top operand as postdate code
+
+<tr>
+<td>bool code	<td>if	<td>-	<td>execute <i>code</i> if <i>bool</i> is true
+
+<tr>
+<td>-		<td>stop	<td>-	<td>pop the current execution stack
+
+<tr>
+<td>int int	<td>eq	<td>bool	<td>test top two operands for equality
+
+<tr>
+<td>int int	<td>ne	<td>bool	<td>test not equal
+
+<tr>
+<td>int int	<td>ge	<td>bool	<td>test greater than or equal
+
+<tr>
+<td>int int	<td>gt	<td>bool	<td>test greater than
+
+<tr>
+<td>int int	<td>le	<td>bool	<td>test less than or equal
+
+<tr>
+<td>int int	<td>lt	<td>bool	<td>test less than
+
+<tr>
+<td>int int	<td>and	<td>bool	<td>logical and
+
+<tr>
+<td>int int	<td>or	<td>bool	<td>logical or
+
+<tr>
+<td>int		<td>not	<td>bool	<td>negate
+
+<tr>
+<td>dict		<td>save	<td>-	<td>save the contents to disk of the top member of the dictionary stack
+
+<tr>
+<td>string any	<td>def	<td>-	<td>define <i>string</i> as object in current dictionary
+
+<tr>
+<td>string	<td>load	<td>any	<td>load  effective value of symbol from current dictionary stack
+
+<tr>
+<td>string dict	<td>get	<td>any	<td> get effective value of symbol from specified dictionary
+
+<tr>
+<td>-		<td>now	<td>int	<td> push current time onto operand stack
+
+<tr>
+<td>string	<td>range <td>int int <td> interpret <i>string</i> as date range and push start and end dates onto stack
+
+<tr>
+<td>key1 key2 dict inv flags	<td>look	<td>dict	<td>queries <i>dict</i> for entries
+that match <i>key1 key2</i> in inversion <i>inv</i>. See below for flags.
+</table>
+
+<p>Flags for the look operator
+<table>
+<tr>
+<th>Mnemonic	<th>Value	<th>Description
+<tr>
+<td>xall	<td>17	<td>Exact match of Key and all values on valid time line
+
+<tr>
+<td>xtog	<td>18	<td>Exact match of key and toggle valid time line
+
+<tr>
+<td>xeff	<td>20	<td>Exact match of key and effective value only
+
+<tr>
+<td>pall	<td>33	<td>Prefix match of key and all values on valid time line
+
+<tr>
+<td>ptog	<td>34	<td>Prefix match of key and toggle valid time line
+
+<tr>
+<td>peff	<td>36	<td>Prefix match of key and effective value only
+
+<tr>
+<td>rall	<td>9	<td>Range between key1 and key2 and all values on valid time line
+
+<tr>
+<td>rtog	<td>10	<td>Range between key1 and key2 and toggle valid time line
+
+<tr>
+<td>reff	<td>12	<td>Range between key1 and key2 and effective values for each matching key only
+</table>
+
+<h2>TODO</h2>
+<ul>
+<li>String handling functions including regex, subs, gsub, etc.
+<li>Extended precision arithmetic.
+<li>Pipes, streams, channels. The best way of building up
+queries of btrees and calculating results is using pipelines. 
+Either we create them as part of the language or we stick
+to using standard shell pipelines and create convenience
+methods for pd to work as a filter.
+<li>Error handling and type checking.
+<li>A hash table without temporal properties (a dict that is not a tdb Btree).
+<li>Coincidence operator
+</ul>
+<h2>Bugs</h2>
+Many, many, many.
+Memory handling is very bad; there are several leaks including
+<ul>
+<li>Strings pushed onto execution stack aren't released
+<li>Btree's are not freed
+<li>No special char quoting yet
+<ul>
+</body>
+</html>

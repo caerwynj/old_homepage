@@ -1,0 +1,37 @@
+<HEAD>
+<TITLE>Plan 9 man page</TITLE>
+<META content="text/html; charset=utf-8" http-equiv=Content-Type>
+</HEAD>
+<BODY BGCOLOR=WHITE>
+   <br>
+<H4>NAME     <br></H4>
+<DL><DT><DD>tdbadd - insert records into a temporal relation<br>
+</DL><H4>SYNOPSIS     <br></H4>
+<DL><DT><DD><TT>tdbadd </TT>[ <EM>-123p </EM>] <EM>file </EM>[ <EM>attribute </EM>]<br>
+</DL><H4>DESCRIPTION     <br></H4>
+<DL><DT><DD><EM>Tdbadd </EM>inserts records read from standard input into the temporal relation stored in <EM>file</EM>.  <P>
+If <EM>file </EM>does not exist it will be created.  <P>
+The temporal relation in <EM>file </EM>is a Btree with each entry containing the fields transaction time, valid time, element, and attribute.  <P>
+Input fields are separated by tabs, and records are separated by lines. The input fields are the same as those for the temporal relation, but with tranasaction time, valid time and attribute optional. Transaction time and valid time default to the current time if they are not read from input.  <P>
+The possible combination of inputs are the following:<br>
+1 fieldelement<br>
+2 fields<br>
+</DL><DL><DT><DD><DL><DT><DD><DL><DT><DD>element attribute<br>
+</DL></DL>3 fields<br>
+</DL><DL><DT><DD><DL><DT><DD><DL><DT><DD>valid-time element attribute<br>
+</DL></DL>4 fields<br>
+</DL><DL><DT><DD><DL><DT><DD><DL><DT><DD>transaction-time valid-time element attribute  <P>
+</DL></DL>If an <EM>attribute </EM>value is supplied on the command line, it is used in place of any attribute value from standard input.  <P>
+There are three possible inversions in which to store the entry. The entry is added to each inversion specified as an option.  <P>
+The <EM>-p </EM>option prints the records that are inserted to standard output, so the command can appear in the middle of a pipeline.  <P>
+Each entry in a relation should be unique on the four fields, though this is not enforced. To <EM>delete </EM>an entry add another entry with identical valid-time, element, and attributes values. The validity of time, element, and attribute triads is toggled along the transaction time line.<br>
+</DL><H4>EXAMPLES     <br></H4>
+<DL><DT><DD>Store a description for all files in the current directory.<br>
+</DL><DL><DT><DD><DL><DT><DD><TT><DL><DT><DD>9ls |tdbadd -123 desription 'temporal database source code'<br>
+</TT> <P>
+</DL></DL></DL><H4>SEE ALSO     <br></H4>
+<A HREF="tdbjoin.html"><DL><DT><DD><EM>tdbjoin</EM>(1)<br></A>
+</DL>
+<BR>
+
+</BODY></HTML>
